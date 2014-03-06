@@ -3,14 +3,16 @@
 
 int main()
 {
-	sf::RenderWindow 	window(sf::VideoMode(800, 600), sf::String("ZIGGYZAG"));;
+	sf::RenderWindow 	window(sf::VideoMode(800, 600), sf::String("ZIGGYZAG"), sf::Style::Default, sf::ContextSettings(0, 0, 8, 2, 0));;
+	window.setVerticalSyncEnabled(true);
 	sf::Event			event;
 	sf::Clock			clock;
 	sf::Time			elapsed_time;
 
 	DragonCurve 				zz;
+	float				zoomlevel = 1;
 
-	unsigned short		update_limit = 14;
+	unsigned short		update_limit = 18;
 	unsigned short		updates =0;
 
 	while(window.isOpen())
@@ -23,19 +25,50 @@ int main()
 				if(event.key.code == sf::Keyboard::Escape) {
 					window.close();
 				}
-			} else if(event.type == sf::Event::MouseWheelMoved) {
-				sf::View view = window.getView();
-				view.zoom(1-event.mouseWheel.delta/10);
-				window.setView(view);
 			}
 		}
 
 		elapsed_time += clock.restart();
-		while(elapsed_time >= sf::milliseconds(400) && updates < update_limit)
+		while(elapsed_time >= sf::milliseconds(16))
 		{
-			zz.update();
-			elapsed_time -= sf::milliseconds(400);
-			updates++;
+			if(updates < update_limit) {
+				zz.update();
+				updates++;
+			}
+
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+					sf::View view = window.getView();
+					view.zoom(0.9);
+					zoomlevel *=0.9;
+					window.setView(view);
+			} 
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+					sf::View view = window.getView();
+					view.zoom(1.1);
+					zoomlevel *=1.1;
+					window.setView(view);
+			} 
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+					sf::View view = window.getView();
+					view.move(sf::Vector2f(0, -5*zoomlevel));
+					window.setView(view);
+			} 
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+					sf::View view = window.getView();
+					view.move(sf::Vector2f(0, 5*zoomlevel));
+					window.setView(view);
+			} 
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+					sf::View view = window.getView();
+					view.move(sf::Vector2f(-5*zoomlevel, 0));
+					window.setView(view);
+			} 
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+					sf::View view = window.getView();
+					view.move(sf::Vector2f(5*zoomlevel, 0));
+					window.setView(view);
+			}
+			elapsed_time -= sf::milliseconds(16);
 		}
 
 		window.clear();
