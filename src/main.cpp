@@ -10,7 +10,7 @@ int main()
 
 	DragonCurve 				zz;
 
-	unsigned short		update_limit = 10;
+	unsigned short		update_limit = 14;
 	unsigned short		updates =0;
 
 	while(window.isOpen())
@@ -23,6 +23,10 @@ int main()
 				if(event.key.code == sf::Keyboard::Escape) {
 					window.close();
 				}
+			} else if(event.type == sf::Event::MouseWheelMoved) {
+				sf::View view = window.getView();
+				view.zoom(1-event.mouseWheel.delta/10);
+				window.setView(view);
 			}
 		}
 
