@@ -8,6 +8,7 @@ int main()
 	sf::Event			event;
 	sf::Clock			clock;
 	sf::Time			elapsed_time;
+	sf::Time			curve_update;
 
 	DragonCurve 				zz;
 	float				zoomlevel = 1;
@@ -31,9 +32,11 @@ int main()
 		elapsed_time += clock.restart();
 		while(elapsed_time >= sf::milliseconds(16))
 		{
-			if(updates < update_limit) {
+			curve_update += elapsed_time;
+			if(updates < update_limit && curve_update >= sf::milliseconds(500)) {
 				zz.update();
 				updates++;
+				curve_update -= sf::milliseconds(500);
 			}
 
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
